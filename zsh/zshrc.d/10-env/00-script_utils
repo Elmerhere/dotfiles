@@ -1,0 +1,260 @@
+#########################################
+# env/script_utils
+# Author: Rui Pinheiro
+#
+# Utility methods for zsh script functions and methods
+
+# Basic escape codes
+typeset -g esc=$'\e[' rc=$'m'
+
+################
+# Colors
+typeset -g fg256="${esc}38;5;" bg256="${esc}48;5;"
+
+autoload -U colors && colors
+
+function list_colors {
+	i2=0
+	for i in {0..255} ; do
+		(( i2 += 1 ))
+		echo -en "$fg_bold[black]"
+		echo -en "${bg256}${i}${rc}${i}${reset_color}\t"
+		
+		if [[ "$i2" -eq 10 ]]; then
+			echo -en "\n"
+			i2=0
+		fi
+	done
+	echo
+}
+
+function add_named_color {
+	local name="$1" cnum="$2"
+
+	fg[$name]="$fg256$cnum$rc"
+	fg_bold[$name]="$fg256$cnum;$color[bold]$rc"
+	fg_no_bold[$name]="$fg256$cnum;$color[normal]$rc"
+
+	bg[$name]="$bg256$cnum$rc"
+	bg_bold[$name]="$bg256$cnum;$color[bold]$rc"
+	bg_no_bold[$name]="$bg256$cnum;$color[no_bold]$rc"
+}
+
+# Custom colors
+add_named_color "purple" 13
+add_named_color "lime" 154
+
+
+#################
+# Datetime
+zmodload "zsh/datetime"
+
+# Returns 0 if at least $1 seconds have elapsed since $2
+function time_elapsed {
+	local res=0
+	local start="${2-0}"
+	local seconds="${1-0}"
+
+	[[ "$start" -eq "0" ]] && return 0
+
+	local now="$EPOCHSECONDS"
+	integer elapsed=$now-$start
+	if (($elapsed < ${seconds})); then
+		res=1
+	fi
+	unset elapsed
+	return "$res"
+}
+
+# Returns 0 if $EPOCHSECONDS >= $1
+function time_passed {
+	local val="${1-0}"
+	[[ "$val" -eq "0" ]] && return 0
+
+	(( $EPOCHSECONDS >= $val )) && return 0
+	return 1
+}
+
+# Echos $1 seconds as a human-readable "Xd Yh Wm Zs"
+function human_readable_seconds {
+	local tmp="$1"
+	local days="$(( tmp / 60 / 60 / 24 ))"
+	local hours="$(( tmp / 60 / 60 % 24 ))"
+	local minutes="$(( tmp / 60 % 60 ))"
+	local seconds="$(( tmp % 60 ))"
+	(( $days > 0 )) && echo -n "${days}d"
+	(( $hours > 0 )) && echo -n "${hours}h"
+	(( $minutes > 0 )) && echo -n "${minutes}m"
+	echo -n "${seconds}s"
+}
+
+
+#################
+# Echo
+function echo_error {
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "$fg_bold[red][$title] ERROR: ${text}${reset_color}"
+}
+
+function echo_warn {
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "$fg[magenta][$title] WARNING: ${text}${reset_color}"
+}
+
+function echo_info {
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "[$title] ${text}${reset_color}"
+}
+
+function echo_debug {
+	if is_true "$ZSH_SCRIPT_DEBUG" ; then
+		local text="$1"
+		local title="${2-$ZSH_SCRIPT_TITLE}"
+		echo "$fg[cyan][$title] ${text}${reset_color}"
+	fi
+}
+
+# Echos command using echo_debug, then runs it
+function echo_run {
+	echo_debug "$@"
+	eval "$@"
+}
+
+#################
+# Confirm something from user
+function confirm_yn {
+	read -q \?"$fg[white][$ZSH_SCRIPT_TITLE] $@ [yn] $reset_color"
+	local retval="$?"
+
+	echo
+
+	return "$retval"
+}
+
+#################
+# Check if path is inside home
+function path_in_home {
+	local abs_path="$(readlink -f "$@")"
+
+	if [[ "$abs_path/" == "$HOME/"* ]]; then
+		return 0
+	fi
+
+	return 1
+}
+
+#################
+# Trim string
+# NOTE: Slow implementation as it needs to do command substitution
+function trim {
+	echo "$@:l" | xargs # trim white-space
+}
+
+#################
+# Check if variable is not [unset, empty] or starts with "0"
+function is_true {
+	local in="${1[1]}"
+	if [[ -z "$in" ]] || # Unset or empty
+	   [[ "$in" = "0" ]] # "0"
+	then
+		return 1
+	fi
+	return 0
+}
+
+#################
+# Check if not is_true
+function is_false {
+	is_true "$@" && return 1
+	return 0
+}
+
+#################
+# Check if string is a valid integer
+function is_int {
+	if [[ "$@" =~ ^-?[0-9]+$ ]]; then
+		return 0
+	fi
+	return 1
+}
+
+function is_uint {
+	if [[ "$@" =~ ^[Ma[0-9]+$ ]]; then
+		return 0
+	fi
+	return 1
+}
+
+#################
+# Check if executable is in path
+function in_path {
+	whence -w "$@" >/dev/null
+}
+
+# Check if a function exists
+function is_function {
+	typeset -f "$@" > /dev/null
+}
+
+# Check if an alias exists
+function is_alias {
+	alias -L "$@"
+}
+
+
+#################
+# Delimiter Prepend/Append/Remove
+# Allows to easily handle string-arrays (i.e. split by a delimiter)
+
+# Usage: delim_prepend <delimiter> <name> <string_to_prepend>
+function delim_prepend {
+	local delim="$1"
+	local name="$2"
+	local prepend_str="${@:3}"
+
+	# Remove duplicates
+	delim_remove "$delim" "$name" "$prepend_str"
+
+	# Prepend to variable
+	local old_val="${(P)name}"
+	local new_val="${prepend_str}${old_val:+${delim}}${old_val}"
+
+	# Save result
+	export "$name"="$new_val"
+}
+
+# Usage: delim_append <delimiter> <name> <string_to_prepend>
+function delim_append {
+	local delim="$1"
+	local name="$2"
+	local append_str="${@:3}"
+
+	# Remove duplicates
+	delim_remove "$delim" "$name" "$append_str"
+
+	# Prepend to variable
+	local old_val="${(P)name}"
+	local new_val="${old_val}${old_val:+${delim}}${append_str}"
+
+	# Save result
+	export "$name"="$new_val"
+}
+
+# Usage: delim_remove <delimiter> <name> <string_to_remove>
+function delim_remove {
+	local delim="$1"
+	local name="$2"
+	local search_str="${@:3}"
+
+	# Remove delimiter using parameter expansion
+	local new_val="${(P)name}"
+	new_val="${new_val//${delim}${~search_str}${delim}/${delim}}"
+	new_val="${new_val#${~search_str}${delim}}"
+	new_val="${new_val%${delim}${~search_str}}"
+	new_val="${new_val:/${~search_str}/}"
+
+	export "$name"="$new_val"
+}

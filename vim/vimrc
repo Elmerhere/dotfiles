@@ -1,0 +1,37 @@
+"""""""""""""""""""""""""""""""""""""""""
+" vimrc
+" Author: Rui Pinheiro
+"
+" Vim/Neovim configuration file
+"""""""""""""""""""""""""""""""""""""""""
+
+" Disable vimrc compatibility mode
+set nocompatible
+
+" Detect vimrc file path
+let s:vimrc_origpath = expand('<sfile>:p')
+function! GetVimrcPath()
+	let realpath = resolve(s:vimrc_origpath)
+	let dirname = fnamemodify(realpath, ":h")
+	return dirname
+endfunction
+let $VIMRC_PATH = GetVimrcPath()
+
+" Helper function to source dotfiles
+" If $LOCAL_DOTFILES is defined, searches for a local version of the loaded dotfile
+function! SourceDotfile(fname)
+	" Load main version
+	execute 'source ' . $VIMRC_PATH . '/' . a:fname
+
+	" Load local version
+	if !empty($LOCAL_DOTFILES)
+		let local_fpath= $LOCAL_DOTFILES . '/vim/' . a:fname
+
+		if filereadable(local_fpath)
+			execute 'source ' . local_fpath
+		endif
+	endif
+endfunction
+
+" Source init.vim, responsible for doing everything else
+call SourceDotfile('init.vim')

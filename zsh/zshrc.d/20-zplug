@@ -1,0 +1,87 @@
+#########################################
+# zplug
+# Author: Rui Pinheiro
+#
+# Initializes and load Zplug and corresponding plugins
+
+
+###############
+# Configuration
+
+# Auto-suggestions
+#typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10"
+#typeset -g ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
+
+###############
+# Plugins
+typeset -g _zplug_loaded=0
+
+function load_plugins {
+	local type="${1:-1}"
+
+	if [[ "$type" -eq "0" ]]; then
+		function _zplug {
+			local repo="${1%,}"
+			local repo_path="$ZPLUG_ROOT/repos/$repo"
+
+			# Source script from repo
+			if [[ -d "$repo_path" ]]; then
+				local sourcefile
+				for sourcefile in "$repo_path/"*".plugin.zsh" ; do
+					source $sourcefile
+				done
+			else
+				echo_error "Could not execute plugin '$repo'. Try calling 'zplug install' to re-install it."
+			fi
+		}
+	else
+		is_true "$_zplug_loaded" && return
+		source "$ZPLUG_ROOT/init.zsh"
+		function _zplug {
+			zplug $@
+		}
+		_zplug "zplug/zplug"
+	fi
+
+	_zplug "zsh-users/zsh-syntax-highlighting", defer:2
+	_zplug "zsh-users/zsh-history-substring-search", defer:2
+	_zplug "zsh-users/zsh-completions", defer:2
+	#_zplug "zsh-users/zsh-autosuggestions"
+	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
+
+	# Cygwin doesn't really like zsh-async
+	[[ "$ZSH_OS" != *"cygwin"* ]] && _zplug "mafredri/zsh-async", defer:2
+	_zplug "ruipin/zsh-mkprompt", defer:2
+	
+	unfunction _zplug
+	if [[ "$type" -ne "0" ]]; then
+		# Install new plugins
+		if ! zplug check --verbose; then
+			printf "Install? [y/N]: "
+			if read -q; then
+				echo; zplug install
+			fi
+		fi
+
+		# Update plugins
+		[[ "$type" -eq "1" ]] && zplug update #--verbose
+
+		# Finalize plugin loading
+		zplug load #--verbose
+
+		_zplug_loaded=1
+	fi
+}
+
+# Load plugins at shell startup
+load_plugins 0
+
+# Allow easy lazy-loading of zplug
+function zplug {
+	echo_info "Lazy-loading 'zplug'..." "zplug"
+	unfunction zplug
+
+	load_plugins 2
+	zplug $@
+}

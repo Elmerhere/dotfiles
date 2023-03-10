@@ -1,0 +1,49 @@
+#########################################
+# shell/keys
+# Author: Rui Pinheiro
+#
+# Zsh key bindings
+
+# Enable vimode
+bindkey -v
+
+# Normal Mode bindings
+bindkey '^A'    beginning-of-line # Ctrl-A
+bindkey '^[[1~' beginning-of-line # Home
+bindkey '^[[7~' beginning-of-line
+
+bindkey '^E'    end-of-line # Ctrl-E
+bindkey '^[[4~' end-of-line # End
+bindkey '^[[8~' end-of-line
+
+bindkey '^[[2~' overwrite-mode # Insert
+bindkey '^[[3~' delete-char # Delete
+
+bindkey '^[[5~' beginning-of-buffer-or-history # Page-Up
+bindkey '^[[6~' end-of-buffer-or-history # Page-Down
+
+bindkey '^?' backward-delete-char
+
+bindkey '^[[A'  history-substring-search-up # Arrow Up
+bindkey '^[OA'  history-substring-search-up
+bindkey '^[[B'  history-substring-search-down # Arrow Down
+bindkey '^[OB'  history-substring-search-down
+
+bindkey '^i'    complete-word # Tab
+bindkey '^[[Z'  expand-word   # Shift-Tab
+
+
+# VI Mode bindings
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
+bindkey -M viins '^H' backward-delete-char
+
+# Enable Ctrl-x + e / ESC + v to edit command line
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey -M vicmd v edit-command-line
+
+# Avoid waiting for escape timeouts
+export KEYTIMEOUT=0

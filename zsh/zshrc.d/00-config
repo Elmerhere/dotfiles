@@ -1,0 +1,72 @@
+#########################################
+# config
+# Author: Rui Pinheiro
+#
+# Configuration file for the zsh scripts
+
+########################
+# Output
+
+# Whether to output debug information ("echo_debug")
+typeset -g ZSH_SCRIPT_DEBUG=1
+
+# Default title to use in echo_* functions, i.e: "[<script title>] Message here"
+typeset -g ZSH_SCRIPT_TITLE="script"
+
+
+########################
+# Dotfiles
+
+# Create aliases for the folders inside ~dotfiles ?
+typeset -g ZSH_CREATE_DOTFILE_SUBFOLDER_ALIASES=1
+
+# Folders to exclude from dotfile hash aliases
+typeset -g ZSH_EXCLUDE_DOTFILE_ALIASES=("applications")
+
+
+########################
+# Autocomplete
+typeset -g ZSH_COMPINIT_INSECURE=0
+
+
+########################
+# Zplug
+typeset -g ZPLUG_ROOT="$HOME/.zplug"
+
+
+########################
+# Dircolors
+typeset -g ZSH_DIRCOLORS_PATH="$HOME/src/dircolors-solarized/dircolors.256dark"
+
+
+########################
+# Locale
+
+# Force UTF-8 locale
+typeset -g ZSH_FORCE_UTF8=1
+
+
+########################
+# Local Prefix
+export LOCAL_PREFIX=""
+export LOCAL_BUILD_FOLDER="$HOME/src"
+
+
+########################
+# Pager
+typeset -g ZSH_AUTO_DETECT_PAGER=1
+
+# less: use "quit-if-one-screen". Can cause issues in less version < 530
+typeset -g ZSH_LESS_QUIT_IF_ONE_SCREEN=1
+
+
+########################
+# Prompt
+
+# Cache mkprompt results
+typeset -g ZSH_MKPROMPT_CACHE=0
+
+
+########################
+# Tmux
+typeset -g TMUX_MAIN_SESSION="tmux"

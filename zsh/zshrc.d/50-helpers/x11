@@ -1,0 +1,120 @@
+#########################################
+# helpers/x11
+# Author: Rui Pinheiro
+#
+# x11-related helpers
+
+# Test if $DISPLAY is valid
+function display_valid {
+	xset q &> /dev/null
+	return $?
+}
+
+# Change display safely
+function set_display {
+	local old_display="$DISPLAY"
+
+	export DISPLAY="$@"
+
+	if ! display_valid ; then
+		echo_error "Display '$DISPLAY' is not connectable." "set_display"
+		export DISPLAY="$old_display"
+		return 1
+	fi
+
+	echo_info "Set display '$DISPLAY'." "set_display"
+	return 0
+}
+
+# Sets DISPLAY environment variable to network gateway (host)
+# If passed a command as argument, runs only this command with the host X display
+#
+# Useful for Virtualbox VMs, since the host OS is the gateway
+function gateway_x {
+
+	local gateway
+	local display
+	gateway="$(ip route show 0.0.0.0/0 | cut -d\  -f3)"
+
+	if [[ -z "$gateway" ]]; then
+		echo_error "Could not obtain gateway IP address" "$0"
+		return 1
+	fi
+
+	display="$gateway:0.0"
+	echo_info "DISPLAY=\"$display\"" "$0"
+
+	if [[ -z "$@" ]]; then
+		set_display "$display" || return $?
+		xrdb_merge
+	else
+		(
+			set_display "$display" || return $?
+			xrdb_merge
+			$@ 2&>1 > /dev/null &
+		)
+	fi
+}
+alias gwx="gateway_x"
+
+
+# Merge ~/.Xresources
+function xrdb_merge {
+	xrdb -merge ~/.Xresources
+}
+
+
+# X11 buffer controls
+# Param 0: Buffer to access
+#          "primary", "secondary", "clipboard"
+# Stdin: Modify buffer contents
+# Stdout (if no stdin provided): Read buffer contents
+function xbuffer {
+	if [[ "$#" -ne "1" ]]; then
+		echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+		return 1
+	fi
+
+	local selection=""
+	case "$1" in
+		"p"|"primary")
+			selection="primary"
+			;;
+		"s"|"secondary")
+			selection="secondary"
+			;;
+		"c"|"clipboard")
+			selection="clipboard"
+			;;
+		*)
+			echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+			return 2
+			;;
+	esac
+
+	if [[ -z "$selection" ]]; then
+		echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+		return 3
+	fi
+
+	if in_path "xclip" ; then
+		if [[ ! -t 0 ]]; then
+			xclip -i -selection "$selection"
+		else
+			xclip -o -selection "$selection"
+		fi
+	elif in_path "xsel" ; then
+		xsel "--$selection"
+	else
+		echo_error "No clipboard provider found (xsel/xclip)" "$0"
+	fi
+}
+
+alias xp2c="xbuffer primary   | xbuffer clipboard"
+alias xc2p="xbuffer clipboard | xbuffer primary  "
+
+alias xs2c="xbuffer secondary | xbuffer clipboard"
+alias xc2s="xbuffer clipboard | xbuffer secondary"
+
+alias xp2s="xbuffer primary   | xbuffer secondary"
+alias xs2p="xbuffer secondary | xbuffer primary  "

@@ -1,0 +1,17 @@
+#########################################
+# aliases/sed
+# Author: Rui Pinheiro
+#
+# sed-related aliases and helpers
+
+#############
+# Aliases
+alias sed='sed --follow-symlinks'
+
+#############
+# Recursive sed
+function recsed {
+	find "$1" -type f -exec \
+		sed -i ${@:2} {} +
+}
+

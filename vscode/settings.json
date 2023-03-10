@@ -1,0 +1,290 @@
+{
+    // Disable telemetry and experiments
+    "telemetry.telemetryLevel": "off",
+    "workbench.enableExperiments": false,
+
+    // Color scheme
+    "workbench.colorTheme": "Braver's Solarized Dark (themed workbench)",
+    "workbench.iconTheme": "material-icon-theme",
+
+    // Editor - Tabs
+    "editor.detectIndentation": true, // Automatically adapt indentation style to the file being edited
+    "editor.insertSpaces": true, // Do not expand tabs into spaces
+    "editor.tabSize": 4, // Use 4-space tabs
+
+    // Editor - Font
+    "editor.fontFamily": "MesloLGSDZ NF",
+    "editor.fontSize": 13,
+    "editor.fontLigatures": true,
+
+    // Editor - Smooth scrolling
+    "editor.smoothScrolling": true,
+    "editor.cursorSmoothCaretAnimation": true,
+    "workbench.list.smoothScrolling": true,
+
+    // Editor - Force a minimum of N surrounding lines above/below cursor
+    "editor.cursorSurroundingLines": 3,
+    "editor.cursorSurroundingLinesStyle": "all",
+
+    // Editor - Misc
+    "editor.renderControlCharacters": true, // Always render all control character
+    "editor.renderWhitespace": "all", // Always render all whitespace
+    "editor.wordWrap": "on", // Enable word-wrap
+    "editor.rulers": [80, 133, 160], // Vertical rulers
+    "files.trimTrailingWhitespace": true, // Trim trailing whitespace on save
+    "editor.mouseWheelZoom": true, // Allow Ctrl+MouseWheel to zoom font size in/out
+    "editor.wrappingIndent": "indent", // Add one extra indent when wordwrapping
+    "editor.mouseWheelScrollSensitivity": 2, // Increase scrolling sensitivity
+
+
+    //-----------------
+    // UI
+    "workbench.view.alwaysShowHeaderActions": true,
+
+    // UI - Editor tab sizings ('shrink' = allow reducing if necessary to save space)
+    "workbench.editor.tabSizing": "shrink",
+
+    // UI - Colors
+    "workbench.colorCustomizations": {
+        "editorIndentGuide.activeBackground": "#93a1a191", // Active indentation guide
+        "editorRuler.foreground": "#93a1a140", // Vertical rulers
+
+        "editorWhitespace.foreground": "#93a1a135", // Whitespace indicators
+        "editor.background": "#002b36",
+
+        // Colored Brackets
+        "editorBracketHighlight.foreground1": "#ceaf00",
+        "editorBracketHighlight.foreground2": "#da70d6",
+        "editorBracketHighlight.foreground3": "#179fff",
+        "editorBracketHighlight.foreground4": "#9370DB", // MediumPurple
+        "editorBracketHighlight.foreground5": "#ff6b35", // OrangeRed
+        "editorBracketHighlight.foreground6": "#74c074", // PaleGreen
+        "editorBracketHighlight.unexpectedBracket.foreground": "#ff1212",
+    },
+
+    // UI - Tokens
+    "editor.tokenColorCustomizations": {
+        // Use lime keywords, rather than the theme default (1)
+        "keywords": "#859900",
+
+        // Complex rules here
+        "textMateRules": [
+            {
+                "scope": [ "constant.character", "constant.other" ],
+                "settings": { "foreground": "#44c0d6cb" }
+            },{
+                "scope": [ "constant.other.define.systemverilog"],
+                "settings": { "foreground": "#ff5c5cd2" }
+            },{
+                "scope": "support.function",
+                "settings": { "foreground": "#B58900" }
+            },{
+                "scope": "keyword.control",
+                "settings": { "foreground": "#B58900" }
+            },
+        ],
+    },
+
+
+    //-----------------
+    // File exclusions
+    "files.exclude": {
+        "**/.git*": true, // Git
+        "**/.vscode": true, // Visual Studio Code
+        "**/.dvt": true, // DVT Eclipse IDE
+        "**/eclipse": true, // More DVT Eclipse IDE
+        "**/.*": true, // Anything else starting with a dot
+    },
+
+
+    //-----------------
+    // Favourites
+    "favorites.storageFilePath": ".favorites.json",
+    "favorites.storageRegistry": [
+        "../favorites.json"
+    ],
+
+
+    //-----------------
+    // Git / Gitlens
+    "git.enableSmartCommit": false, // No automatic commits
+    "git.autofetch": false, // No auto-fetching
+    "gitlens.codeLens.enabled": false, // Disable codelens
+    "gitlens.currentLine.enabled": false, // Disable codelens on cursor line
+    "gitlens.hovers.currentLine.enabled": false, // Disable codelens when hovering on a line
+    "gitlens.hovers.currentLine.over": "line", // Trigger hovers when hovering anywhere over a line (if enabled with *.enabled)
+    "gitlens.statusBar.command": "gitlens.revealCommitInView", // Clicking the gitlens entry in the statusbar goes to the commit
+    "gitlens.showWhatsNewAfterUpgrades": false, // Don't show "What's new" page
+    "gitlens.showWelcomeOnInstall": false, // Don't show "Welcome" page
+    "gitlens.plusFeatures.enabled": false, // Don't enable Gitlens+ features which need login/subscription
+    "gitlens.currentLine.pullRequests.enabled": false, // Disable support for pull request information
+
+
+    //-----------------
+    // Error Lens
+    "errorLens.gutterIconsEnabled": true, // Enable gutter icons
+
+
+    //-----------------
+    // Indentation Guides + Colored Brackets
+    "editor.guides.indentation": true, // Render Indentation Guides
+    "editor.bracketPairColorization.enabled": true, // Enable bracket pair colorisation
+    "editor.guides.bracketPairs": true, // Color the indentation guides as well
+    "editor.guides.bracketPairsHorizontal": true, // Add horizontal bracket pair guides, not just indentation guides
+
+
+    //-----------------
+    // Better Comments
+    "better-comments.tags": [
+        // Copied from the default config
+        { "tag": "!", "color": "#FF2D00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "?", "color": "#3498DB", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "//", "color": "#474747", "strikethrough": true, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "todo", "color": "#FF8C00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "*", "color": "#98C379", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        // Custom ones start here
+        { "tag": "revisit", "color": "#FF8C00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "fixme", "color": "#FF2D00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "warn", "color": "#ffcc00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+    ],
+
+
+    //-----------------
+    // Dynamic Tabs
+    "dynamicTab.indentBasedOnPrecedingLine": true, // Match indent with previous line
+    "dynamicTab.numberOfPreviousLinesToSearch": 2, // Search up to two lines
+
+
+    //-----------------
+    // VSCodeVim - see https://marketplace.visualstudio.com/items?itemName=vscodevim.vim
+    "vim.visualstar": true, // Allow searching using */# in visual mode
+    "vim.highlightedyank.enable": true, // Highlight yank target when yanking
+    "vim.debug.silent": true, // Disable logging for performance
+    "vim.gdefault": true, // Assume '/g' is default when doing text replacement commands
+    "vim.hlsearch": true, // Show text matches of the most recent search command
+    "vim.ignorecase": false, // Do not ignore case when searching - can use '\c' to ignore case
+    "vim.maxmapdepth": 100, // Reduce number of recursive key mappings allowed
+    "vim.useSystemClipboard": true,
+
+    // Vim keybindings
+    "vim.leader": "\\", // Set <leader> key
+
+    "vim.useCtrlKeys": false, // 'false' disables mapping of Ctrl keys
+    "vim.handleKeys": { // Enable or disable handling of specific key combinations
+        "<C-v>": true, // Enter Visual Line Mode
+        "<C-V>": true, // Enter Visual Block Mode
+        "<C-r>": true, // Redo
+    },
+
+
+    "vim.normalModeKeyBindings": [
+        // Shift + Leader => 2x Leader
+        { "before": ["|"], "after": ["<leader>", "<leader>"] },
+
+        // Leader + y/s/d/x/c/p uses * register
+        { "before": ["<leader>", "y"], "after": ["\"", "*", "y"] },
+        { "before": ["<leader>", "Y"], "after": ["\"", "*", "Y"] },
+        { "before": ["<leader>", "s"], "after": ["\"", "*", "s"] },
+        { "before": ["<leader>", "S"], "after": ["\"", "*", "S"] },
+        { "before": ["<leader>", "d"], "after": ["\"", "*", "d"] },
+        { "before": ["<leader>", "D"], "after": ["\"", "*", "D"] },
+        { "before": ["<leader>", "x"], "after": ["\"", "*", "x"] },
+        { "before": ["<leader>", "X"], "after": ["\"", "*", "X"] },
+        { "before": ["<leader>", "c"], "after": ["\"", "*", "c"] },
+        { "before": ["<leader>", "C"], "after": ["\"", "*", "C"] },
+        { "before": ["<leader>", "p"], "after": ["\"", "*", "p"] },
+        { "before": ["<leader>", "P"], "after": ["\"", "*", "P"] },
+
+        // Select all with ga
+        { "before": ["g", "a"], "after": ["g", "g", "v", "G"] },
+
+        // Split with leader+hjkl / leader+arrows
+        { "before": ["<leader>", "k"    ], "commands": ["workbench.action.splitEditorUp"   ] },
+        { "before": ["<leader>", "Up"   ], "commands": ["workbench.action.splitEditorUp"   ] },
+        { "before": ["<leader>", "j"    ], "commands": ["workbench.action.splitEditorDown" ] },
+        { "before": ["<leader>", "Down" ], "commands": ["workbench.action.splitEditorDown" ] },
+        { "before": ["<leader>", "h"    ], "commands": ["workbench.action.splitEditorLeft" ] },
+        { "before": ["<leader>", "Left" ], "commands": ["workbench.action.splitEditorLeft" ] },
+        { "before": ["<leader>", "l"    ], "commands": ["workbench.action.splitEditorRight"] },
+        { "before": ["<leader>", "Right"], "commands": ["workbench.action.splitEditorRight"] },
+
+        // Save file with leader+w
+        { "before": ["<leader>", "w"], "commands": ["workbench.action.files.save"] },
+    ],
+
+    "vim.normalModeKeyBindingsNonRecursive": [
+        // Tab enters insert mode with proper indentation
+        { "before": ["<Tab>"], "commands": ["tab"], "after": ["i"], "silent": true },
+        //{ "before": ["<Tab>"], "commands": ["extension.dynamictabkey"], "after": ["i"], "silent": true },
+
+        // Use <leader> + / to disable search highlights (:nohl)
+        { "before": ["<leader>", "/"], "commands": [":nohl"] },
+
+        // Use <leader> + t to go to a symbol
+        { "before": ["<leader>", "t"], "commands": ["workbench.action.gotoSymbol"] },
+
+        // Use semicolon to open the command palette (Ctrl-Shift-P)
+        { "before": [";"], "commands": ["workbench.action.showCommands"] },
+
+        // Extension - Numbered Bookmarks
+        // Use 'm' to create numbered bookmarks
+        { "before": ["m","0"], "commands": ["numberedBookmarks.toggleBookmark0"] },
+        { "before": ["m","1"], "commands": ["numberedBookmarks.toggleBookmark1"] },
+        { "before": ["m","2"], "commands": ["numberedBookmarks.toggleBookmark2"] },
+        { "before": ["m","3"], "commands": ["numberedBookmarks.toggleBookmark3"] },
+        { "before": ["m","4"], "commands": ["numberedBookmarks.toggleBookmark4"] },
+        { "before": ["m","5"], "commands": ["numberedBookmarks.toggleBookmark5"] },
+        { "before": ["m","6"], "commands": ["numberedBookmarks.toggleBookmark6"] },
+        { "before": ["m","7"], "commands": ["numberedBookmarks.toggleBookmark7"] },
+        { "before": ["m","8"], "commands": ["numberedBookmarks.toggleBookmark8"] },
+        { "before": ["m","9"], "commands": ["numberedBookmarks.toggleBookmark9"] },
+        // Jump to numbered bookmarks with '#
+        { "before": ["'","0"], "commands": ["numberedBookmarks.jumpToBookmark0"] },
+        { "before": ["'","1"], "commands": ["numberedBookmarks.jumpToBookmark1"] },
+        { "before": ["'","2"], "commands": ["numberedBookmarks.jumpToBookmark2"] },
+        { "before": ["'","3"], "commands": ["numberedBookmarks.jumpToBookmark3"] },
+        { "before": ["'","4"], "commands": ["numberedBookmarks.jumpToBookmark4"] },
+        { "before": ["'","5"], "commands": ["numberedBookmarks.jumpToBookmark5"] },
+        { "before": ["'","6"], "commands": ["numberedBookmarks.jumpToBookmark6"] },
+        { "before": ["'","7"], "commands": ["numberedBookmarks.jumpToBookmark7"] },
+        { "before": ["'","8"], "commands": ["numberedBookmarks.jumpToBookmark8"] },
+        { "before": ["'","9"], "commands": ["numberedBookmarks.jumpToBookmark9"] },
+        // Clear all bookmarks with <leader> + m
+        { "before": ["<leader>", "m"], "commands": ["numberedBookmarks.clear"] },
+    ],
+
+    "vim.visualModeKeyBindings": [
+        // Use Tab/Shift-Tab to indent/outdent in visual mode
+        { "before": ["<Tab>"      ], "commands": ["editor.action.indentLines" ], "silent": true },
+        { "before": ["<Shift+Tab>"], "commands": ["editor.action.outdentLines"], "silent": true },
+
+        // Leader + y/s/d/x/c/p uses * register
+        { "before": ["<leader>", "y"], "after": ["\"", "*", "y"] },
+        { "before": ["<leader>", "Y"], "after": ["\"", "*", "Y"] },
+        { "before": ["<leader>", "s"], "after": ["\"", "*", "s"] },
+        { "before": ["<leader>", "S"], "after": ["\"", "*", "S"] },
+        { "before": ["<leader>", "d"], "after": ["\"", "*", "d"] },
+        { "before": ["<leader>", "D"], "after": ["\"", "*", "D"] },
+        { "before": ["<leader>", "x"], "after": ["\"", "*", "x"] },
+        { "before": ["<leader>", "X"], "after": ["\"", "*", "X"] },
+        { "before": ["<leader>", "c"], "after": ["\"", "*", "c"] },
+        { "before": ["<leader>", "C"], "after": ["\"", "*", "C"] },
+        { "before": ["<leader>", "p"], "after": ["\"", "*", "p"] },
+        { "before": ["<leader>", "P"], "after": ["\"", "*", "P"] },
+
+        // Paste without overriding the current register
+        { "before": ["p"], "after": ["p", "g", "v", "y"] },
+        { "before": ["P"], "after": ["P", "g", "v", "y"] },
+
+        // Use semicolon (and colon) to open the command palette (Ctrl-Shift-P)
+        { "before": [";"], "commands": ["workbench.action.showCommands"] },
+    ],
+
+    // Vim - EasyMotion
+    "vim.easymotion": true, // Enable vim-easymotion
+
+
+    //-----------------
+    // Automatically added configs below... (empty config is a hack to force VSCode to add new configs after this line)
+    "": "",
+}
